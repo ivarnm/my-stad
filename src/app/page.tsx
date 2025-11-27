@@ -1,9 +1,24 @@
+import { getIkeaLightGroups } from "src/server/actions/ikea";
+import IkeaLightControl from "src/components/IkeaLightControl";
 
-export default function Home() {
+export default async function Home() {
+  const result = await getIkeaLightGroups();
+
+  if (result.error) {
+    return (
+      <div className="flex flex-col items-center h-screen justify-center">
+        <h1 className="text-4xl">Error</h1>
+        <p className="text-red-500">{result.error}</p>
+      </div>
+    );
+  }
+
+  const lightGroups = result.data || [];
+
   return (
-    <div className="flex flex-col items-center h-screen justify-center">
-      <h1 className="text-4xl">Welcome to the Home Page</h1>
-      <p>This is the main landing page of the application.</p>
+    <div className="flex flex-col items-center min-h-screen py-8">
+      <h1 className="text-4xl mb-8">My IKEA Smart Home</h1>
+      <IkeaLightControl lightGroups={lightGroups} />
     </div>
   );
 }
