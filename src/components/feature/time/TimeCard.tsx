@@ -46,17 +46,17 @@ export default function TimeCard() {
         calendar_today
       </span>
       <div>
-        <div className="text-4xl tabular-nums mb-1">{time}</div>
-        <div className="text-(--text-subtle)">
+        <h2 className="text-4xl tabular-nums mb-1">{time}</h2>
+        <p className="text-(--text-subtle)">
           {weekday}, {date} · Week {weekNumber}
-        </div>
-        <div className="text-(--text-subtle) text-sm mt-1 min-h-5">
+        </p>
+        <p className="text-(--text-subtle) text-sm mt-1 min-h-5">
           {location?.address && (
             <>
               {location.address}
             </>
           )}
-        </div>
+        </p>
       </div>
     </Card>
   )
