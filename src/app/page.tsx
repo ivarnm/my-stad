@@ -1,24 +1,16 @@
-import { getIkeaLightGroups } from "src/server/actions/ikea";
-import IkeaLightControl from "src/components/IkeaLightControl";
+import TimeCard from "src/components/feature/time/TimeCard"
+import Card from "src/components/ui/Card"
 
-export default async function Home() {
-  const result = await getIkeaLightGroups();
-
-  if (result.error) {
-    return (
-      <div className="flex flex-col items-center h-screen justify-center">
-        <h1 className="text-4xl">Error</h1>
-        <p className="text-red-500">{result.error}</p>
-      </div>
-    );
-  }
-
-  const lightGroups = result.data || [];
-
+export default function Home() {
   return (
-    <div className="flex flex-col items-center min-h-screen py-8">
-      <h1 className="text-4xl mb-8">My IKEA Smart Home</h1>
-      <IkeaLightControl lightGroups={lightGroups} />
+    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <TimeCard />
+      <Card>
+        <h2 className="text-xl font-bold mb-2">Column 2</h2>
+      </Card>
+      <Card>
+        <h2 className="text-xl font-bold mb-2">Column 3</h2>
+      </Card>
     </div>
-  );
+  )
 }
