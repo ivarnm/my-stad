@@ -1,5 +1,6 @@
 import LightControlsCard from "src/components/feature/lights/LightControlsCard"
 import TimeCard from "src/components/feature/time/TimeCard"
+import TrashCard from "src/components/feature/trash/TrashCard"
 import Card from "src/components/ui/Card"
 
 export default function Home() {
@@ -8,6 +9,7 @@ export default function Home() {
       <div className="flex flex-col gap-4">
         <TimeCard />
         <LightControlsCard />
+        <TrashCard />
       </div>
       <div className="flex flex-col gap-4">
         <Card>

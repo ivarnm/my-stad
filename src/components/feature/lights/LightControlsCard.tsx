@@ -9,7 +9,7 @@ export default async function LightControlsCard() {
   return (
     <Card>
       <div className='flex gap-2 items-center mb-3'>
-        <span className="material-symbols-outlined">
+        <span className="material-symbols-outlined text-(--text-subtle)">
           lightbulb
         </span>
         <h2 className="text-xl font-bold">Lights</h2>

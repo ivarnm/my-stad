@@ -24,7 +24,7 @@ export default async function TimeCard() {
 
   return (
     <Card className='flex gap-5 items-center'>
-      <span className="material-symbols-outlined">
+      <span className="material-symbols-outlined text-(--text-subtle)">
         calendar_today
       </span>
       <div>

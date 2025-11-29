@@ -14,12 +14,6 @@ async function httpClient<T>(
   options: RequestInit = {},
   accessToken?: string
 ): Promise<T> {
-  if (!baseUrl) {
-    throw new Error(
-      "API_BASE_URL is not defined in your environment variables."
-    );
-  }
-
   const fullUrl = `${baseUrl}${endpoint}`;
 
   const defaultHeaders: HeadersInit = {
