@@ -3,7 +3,6 @@ import { getTrashSchedule } from "src/server/actions/trash";
 
 export default async function TrashCard() {
   const result = await getTrashSchedule();
-  console.log(result);
 
   return (
     <Card>

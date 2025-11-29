@@ -60,8 +60,6 @@ export async function getTrashSchedule(): Promise<Result<TrashSchedule[]>> {
 
     for (const entry of trashCalendar.calendar) {
       if (!scheduleMap[entry.fraksjonId] && trashMapping[entry.fraksjonId]) {
-        console.log("Adding..");
-        console.log(entry);
         const pickupDate = new Date(entry.dato);
         const timeDiff = pickupDate.getTime() - now.getTime();
         const daysUntilNextPickup = Math.ceil(timeDiff / (1000 * 3600 * 24));

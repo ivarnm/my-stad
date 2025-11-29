@@ -1,3 +1,4 @@
+import ElectricityCard from "src/components/feature/electricity/ElectricityCard"
 import LightControlsCard from "src/components/feature/lights/LightControlsCard"
 import TimeCard from "src/components/feature/time/TimeCard"
 import TrashCard from "src/components/feature/trash/TrashCard"
@@ -10,6 +11,7 @@ export default function Home() {
         <TimeCard />
         <LightControlsCard />
         <TrashCard />
+        <ElectricityCard />
       </div>
       <div className="flex flex-col gap-4">
         <Card>
