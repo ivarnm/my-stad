@@ -13,7 +13,7 @@ async function electricityClient<T>(
 ): Promise<T> {
   const baseUrl = "https://www.hvakosterstrommen.no/api/v1/";
 
-  return await httpClient<T>(baseUrl, endpoint, options);
+  return await httpClient<T>(baseUrl, endpoint, options, undefined, 3600);
 }
 
 async function fetchPricesForDate(

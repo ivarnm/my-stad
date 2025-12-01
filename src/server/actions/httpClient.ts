@@ -7,12 +7,14 @@
  * @param endpoint The API endpoint to call (e.g., '/users').
  * @param options The standard `fetch` options (method, body, etc.).
  * @param accessToken Optional access token for authorization.
+ * @param revalidate Optional revalidation time in seconds for Next.js caching.
  */
 async function httpClient<T>(
   baseUrl: string,
   endpoint: string,
   options: RequestInit = {},
-  accessToken?: string
+  accessToken?: string,
+  revalidate?: number
 ): Promise<T> {
   const fullUrl = `${baseUrl}${endpoint}`;
 
@@ -25,6 +27,7 @@ async function httpClient<T>(
   }
 
   const mergedOptions: RequestInit = {
+    next: { revalidate: revalidate },
     ...options,
     headers: {
       ...defaultHeaders,

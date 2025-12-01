@@ -33,7 +33,7 @@ async function trvClient<T>(
 ): Promise<T> {
   const baseUrl = "https://trv.no/wp-json/wasteplan/v2/";
 
-  return await httpClient<T>(baseUrl, endpoint, options);
+  return await httpClient<T>(baseUrl, endpoint, options, undefined, 86400);
 }
 
 export async function getTrashSchedule(): Promise<Result<TrashSchedule[]>> {
