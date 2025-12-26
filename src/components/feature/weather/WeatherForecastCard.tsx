@@ -7,17 +7,16 @@ import WeatherAlerts from './WeatherAlerts';
 export default async function WeatherForecastCard() {
   const result = await getWeatherForecasat();
   const forecast = result.data;
-  console.log(result)
 
   return (
-    <Card className="flex flex-col flex-1 overflow-hidden min-h-0">
-      <div className='flex gap-2 items-center justify-between mb-3 shrink-0'>
+    <Card className="flex flex-col">
+      <div className='flex gap-2 items-center justify-between mb-3'>
         <h2 className="text-xl font-bold">Weather Today</h2>
         {!result.error && forecast && (
           <WeatherAlerts alerts={forecast.alerts} />
         )}
       </div>
-      <div className="flex flex-col gap-2 overflow-hidden min-h-0">
+      <div className="flex flex-col gap-2">
         {result.error && (
           <p>{result.error}</p>
         )}
