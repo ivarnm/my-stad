@@ -55,7 +55,7 @@ export async function getIkeaLightGroups(): Promise<Result<IkeaLightGroup[]>> {
 
     return { data: lightGroups };
   } catch (error) {
-    console.error("Error fetching IKEA light groups:", error);
+    console.warn("Error fetching IKEA light groups:", error);
     return { error: "Klarte ikke hente lysgrupper fra IKEA Dirigera Hub" };
   }
 }

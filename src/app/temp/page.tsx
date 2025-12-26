@@ -1,24 +1,21 @@
-import { getIkeaLightGroups } from "src/server/actions/ikea";
-import IkeaLightControl from "src/components/IkeaLightControl";
+"use client"
 
-export default async function Temp() {
-  const result = await getIkeaLightGroups();
+import { useEffect } from "react";
+import { setUserLocation } from "src/server/actions/location";
 
-  if (result.error) {
-    return (
-      <div className="flex flex-col items-center h-screen justify-center">
-        <h1 className="text-4xl">Error</h1>
-        <p className="text-red-500">{result.error}</p>
-      </div>
-    );
-  }
+export default function Temp() {
 
-  const lightGroups = result.data || [];
+  useEffect(() => {
+    setUserLocation({
+      lat: 63.4123,
+      long: 10.4873,
+      address: "Dalheimslyngen 11"
+    })
+  }, []);
 
   return (
     <div className="flex flex-col items-center min-h-screen py-8">
-      <h1 className="text-4xl mb-8">My IKEA Smart Home</h1>
-      <IkeaLightControl lightGroups={lightGroups} />
+      Hola
     </div>
   );
 }

@@ -51,7 +51,7 @@ async function httpClient<T>(
 
     return await response.json();
   } catch (error) {
-    console.error("HTTP Client Error:", error);
+    console.warn("HTTP Client Error:", error);
     throw error;
   }
 }

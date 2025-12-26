@@ -5,7 +5,6 @@ import LightSlider from './LightSlider';
 export default async function LightControlsCard() {
   const result = await getIkeaLightGroups();
 
-
   return (
     <Card>
       <div className='flex gap-2 items-center mb-3'>
