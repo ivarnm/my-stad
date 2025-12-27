@@ -1,6 +1,6 @@
 import Card from 'src/components/ui/Card'
 import { getUserLocation } from 'src/server/actions/location';
-import Time from './Time';
+import TimeCardContent from './TimeCardContent';
 
 export default async function TimeCard() {
   const now = new Date();
@@ -23,25 +23,8 @@ export default async function TimeCard() {
   const weekNumber = getWeekNumber(now);
 
   return (
-    <Card className='flex gap-5 items-center'>
-      <span className="material-symbols-outlined text-(--text-subtle)">
-        calendar_today
-      </span>
-      <div>
-        <Time date={now} />
-        <p className="text-(--text-subtle)">
-          {weekday}, {date} · Week {weekNumber}
-        </p>
-        <p className="text-(--text-subtle) text-sm mt-1 min-h-5">
-          {location?.address ? (
-            <>
-              {location.address}
-            </>
-          ) : (
-            <>No location set</>
-          )}
-        </p>
-      </div>
+    <Card>
+      <TimeCardContent now={now} date={date} weekday={weekday} weekNumber={weekNumber} location={location} />
     </Card>
   )
 }
