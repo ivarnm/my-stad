@@ -3,6 +3,7 @@
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { UserLocation } from ".";
+import { TransitStop } from "../transit";
 
 export async function setUserLocation(location: UserLocation) {
   const cookieStore = await cookies();
@@ -21,7 +22,10 @@ export async function saveUserLocation(
   const address = formData.get("address") as string;
   const lat = parseFloat(formData.get("lat") as string);
   const long = parseFloat(formData.get("long") as string);
-  const transitStops = formData.getAll("transitStops") as string[];
+  const transitStopsJson = formData.getAll("transitStops") as string[];
+  const transitStops = transitStopsJson.map(
+    (stop) => JSON.parse(stop) as TransitStop
+  );
 
   const location: UserLocation = {
     address,
@@ -41,7 +45,10 @@ export async function getUserLocation(): Promise<UserLocation | null> {
   const locationCookie = cookieStore.get("user-location");
   if (locationCookie) {
     try {
-      const location: UserLocation = JSON.parse(locationCookie.value);
+      const location: UserLocation = JSON.parse(
+        locationCookie.value
+      ) as UserLocation;
+
       return location;
     } catch (error) {
       console.error("Error parsing user location from cookie:", error);

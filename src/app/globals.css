@@ -7,6 +7,7 @@
   --surface-muted: #262626;
   --text-subtle: #a1a1a1;
   --fill-default: #3880b9;
+  --text-secondary: #61b7fa;
 }
 
 @theme inline {

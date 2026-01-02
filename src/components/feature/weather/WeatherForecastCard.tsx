@@ -37,8 +37,8 @@ export default async function WeatherForecastCard() {
               <tbody>
                 {forecast.weather.map((hour) => (
                   <tr key={hour.time.toISOString()} className="text-lg">
-                    <td className="bg-[#2D2D2D] px-5 py-1 rounded-l-xl">{String(hour.time.getHours()).padStart(2, "0")}</td>
-                    <td className="bg-[#2D2D2D] px-5">
+                    <td className="bg-(--surface-muted) px-5 py-1 rounded-l-xl">{String(hour.time.getHours()).padStart(2, "0")}</td>
+                    <td className="bg-(--surface-muted) px-5">
                       {hour.symbolCode ? (
                         <div className='w-[30px]'>
                           <Image className=''
@@ -52,11 +52,11 @@ export default async function WeatherForecastCard() {
                         <span className="text-gray-500">-</span>
                       )}
                     </td>
-                    <td className={`bg-[#2D2D2D] px-5 py-1 ${hour.airTemperature > 0 ? 'text-[#F54900]' : 'text-(--fill-default)'}`}>{hour.airTemperature.toFixed(0)}°</td>
-                    <td className="bg-[#2D2D2D] px-5 py-1 text-(--fill-default)">
+                    <td className={`bg-(--surface-muted) px-5 py-1 ${hour.airTemperature > 0 ? 'text-[#F54900]' : 'text-(--fill-default)'}`}>{hour.airTemperature.toFixed(0)}°</td>
+                    <td className="bg-(--surface-muted) px-5 py-1 text-(--fill-default)">
                       {hour.maxPrecipitationAmount > 0 ? `${hour.minPrecipitationAmount} - ${hour.maxPrecipitationAmount}` : ''}
                     </td>
-                    <td className="bg-[#2D2D2D] px-5 py-1 rounded-r-xl flex justify-end items-center gap-2">
+                    <td className="bg-(--surface-muted) px-5 py-1 rounded-r-xl flex justify-end items-center gap-2">
                       <span>{`${hour.windSpeed.toFixed(0)} ${hour.windGustSpeed ? `(${hour.windGustSpeed.toFixed(0)})` : ''}`}</span>
                       {/* <span className='material-symbols-outlined'>{hour.windIcon}</span> */}
                       <span className='' style={{ transform: `rotate(${hour.windFromDirection}deg)` }}>

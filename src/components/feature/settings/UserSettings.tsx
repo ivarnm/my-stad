@@ -1,24 +1,36 @@
 "use client";
 
-import React, { useActionState, useState } from 'react';
+import React, { useActionState, useEffect, useState } from 'react';
 import { UserLocation, saveUserLocation } from 'src/server/actions/location';
-import Card from 'src/components/ui/Card';
-
-const TRANSIT_STOPS = [
-  "Jernbanetorget",
-  "Nationaltheatret",
-  "Majorstuen",
-  "Sinsen",
-  "Brynseng"
-];
+import TransitStopSelector from './TransitStopSelector';
+import { TransitStop } from 'src/server/actions/transit';
 
 export default function UserSettings({ location }: { location: UserLocation | null }) {
+  const [state, formAction, isPending] = useActionState(saveUserLocation, { message: '' });
   const [formValues, setFormValues] = useState({
     address: location?.address || '',
     lat: location?.lat?.toString() || '',
     long: location?.long?.toString() || '',
+    transitStops: location?.transitStops || []
   });
-  const [state, formAction, isPending] = useActionState(saveUserLocation, { message: '' });
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      if (location && !cancelled) {
+        setFormValues({
+          address: location.address,
+          lat: location.lat.toString(),
+          long: location.long.toString(),
+          transitStops: location.transitStops || []
+        });
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [location]);
+
 
   const handleGetLocation = () => {
     if ("geolocation" in navigator) {
@@ -41,9 +53,8 @@ export default function UserSettings({ location }: { location: UserLocation | nu
     const { name, value } = e.target;
 
     if (name === 'lat' || name === 'long') {
-      // limit to 4 decimal places
       const floatValue = parseFloat(value);
-      if (!isNaN(floatValue)) {
+      if (!isNaN(floatValue) && value.includes('.') && value.split('.')[1].length > 4) {
         const fixedValue = floatValue.toFixed(4);
         setFormValues(prev => ({
           ...prev,
@@ -57,6 +68,15 @@ export default function UserSettings({ location }: { location: UserLocation | nu
       ...prev,
       [name]: value
     }));
+  };
+
+  const handleTransitStopChange = (stop: TransitStop) => {
+    setFormValues(prev => {
+      const stops = prev.transitStops.includes(stop)
+        ? prev.transitStops.filter(s => s !== stop)
+        : [...prev.transitStops, stop];
+      return { ...prev, transitStops: stops };
+    });
   };
 
   return (
@@ -80,7 +100,7 @@ export default function UserSettings({ location }: { location: UserLocation | nu
           <button
             type="button"
             onClick={handleGetLocation}
-            className="text-xs text-(--fill-default) hover:underline"
+            className="text-xs text-(--text-secondary) hover:underline"
           >
             Get Current Location
           </button>
@@ -113,20 +133,12 @@ export default function UserSettings({ location }: { location: UserLocation | nu
 
       <div className="flex flex-col gap-1">
         <label className="text-sm font-medium text-(--text-subtle)">Transit Stops</label>
-        <div className="flex flex-col gap-2 bg-(--surface-muted) p-2 rounded">
-          {TRANSIT_STOPS.map(stop => (
-            <label key={stop} className="flex items-center gap-2 cursor-pointer">
-              <input
-                type="checkbox"
-                name="transitStops"
-                value={stop}
-                defaultChecked={location?.transitStops?.includes(stop)}
-                className="accent-(--fill-default)"
-              />
-              <span className="text-sm">{stop}</span>
-            </label>
-          ))}
-        </div>
+        <TransitStopSelector
+          lat={formValues.lat}
+          long={formValues.long}
+          selectedStops={formValues.transitStops.map(stop => stop.id)}
+          onStopChange={handleTransitStopChange}
+        />
       </div>
 
       <button
