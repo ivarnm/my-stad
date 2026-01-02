@@ -1,14 +1,7 @@
 import httpClient from "../httpClient";
 import { getUserLocation, UserLocation } from "../location";
 import { Result } from "../types";
-import {
-  ContentBlock,
-  HourlyWeather,
-  WeatherAlert,
-  WeatherAlertOld,
-  WeatherForecast,
-} from ".";
-import { mergeInfoBlocks } from "./alertInfoParse";
+import { ContentBlock, HourlyWeather, WeatherAlert, WeatherForecast } from ".";
 
 interface MetHourlyWeatherResponse {
   properties: {
@@ -46,28 +39,6 @@ interface MetSunsetResponse {
       time: string;
     };
   };
-}
-
-interface MetAlertsResponse {
-  features: {
-    properties: {
-      area: string;
-      awareness_level: string;
-      consequences: string;
-      description: string;
-      event: string;
-      eventAwarenessName: string;
-      instruction: string;
-      resources: {
-        description: string;
-        mimeType: string;
-        uri: string;
-      }[];
-    };
-    when: {
-      interval: string[]; // [from, to] in ISO format
-    };
-  }[];
 }
 
 interface YrAlertsResponse {
@@ -119,21 +90,17 @@ export async function getWeatherForecasat(): Promise<Result<WeatherForecast>> {
   }
 
   try {
-    const [weather, { sunrise, sunset }, alertsOld, alerts] = await Promise.all(
-      [
-        getHourlyWeather(location),
-        getSunriseAndSunset(location),
-        getWeatherAlertsOld(location),
-        getWeatherAlerts(),
-      ]
-    );
+    const [weather, { sunrise, sunset }, alerts] = await Promise.all([
+      getHourlyWeather(location),
+      getSunriseAndSunset(location),
+      getWeatherAlerts(),
+    ]);
 
     return {
       data: {
         weather,
         sunrise,
         sunset,
-        alertsOld,
         alerts,
       },
     };
@@ -190,40 +157,6 @@ async function getSunriseAndSunset(
     sunrise: new Date(data.properties.sunrise.time),
     sunset: new Date(data.properties.sunset.time),
   };
-}
-
-async function getWeatherAlertsOld(
-  location: UserLocation
-): Promise<WeatherAlertOld[]> {
-  const data = await metClient<MetAlertsResponse>(
-    `metalerts/2.0/current.json?lat=${location.lat}&lon=${location.long}&lang=en`,
-    {},
-    0
-  );
-
-  return data.features.map((feature) => {
-    const props = feature.properties;
-    const when = feature.when.interval;
-    const [awarenessLevel, awarenessCode] = props.awareness_level.split(";");
-
-    return {
-      symbolCode: `icon-warning-${props.eventAwarenessName.toLowerCase()}-${awarenessCode.trim()}.png`,
-      area: props.area,
-      awarenessLevel: parseInt(awarenessLevel),
-      eventName: props.eventAwarenessName,
-      infoBlocks: mergeInfoBlocks(
-        props.eventAwarenessName,
-        props.description,
-        props.consequences,
-        props.instruction
-      ),
-      map: props.resources.find((r) => r.mimeType === "image/png")?.uri,
-      mapAltText: props.resources.find((r) => r.mimeType === "image/png")
-        ?.description,
-      fromDate: when[0] ? new Date(when[0]) : undefined,
-      toDate: when[1] ? new Date(when[1]) : undefined,
-    };
-  });
 }
 
 async function getWeatherAlerts(): Promise<WeatherForecast["alerts"]> {

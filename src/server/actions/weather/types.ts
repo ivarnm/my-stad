@@ -9,26 +9,10 @@ export interface HourlyWeather {
   symbolCode?: string; // weather symbol code referencing https://github.com/metno/weathericons/tree/main/weather
 }
 
-export interface WeatherAlertOld {
-  symbolCode: string; // alert symbol referencing https://github.com/nrkno/yr-warning-icons/tree/master
-  area: string;
-  awarenessLevel: number;
-  eventName: string;
-  infoBlocks: {
-    title: string;
-    description: string;
-  }[]; // comprised of eventName, description, consequences and instruction from the met.no api
-  map?: string; // image url
-  mapAltText?: string;
-  fromDate?: Date;
-  toDate?: Date;
-}
-
 export interface WeatherForecast {
   weather: HourlyWeather[];
   sunrise: Date;
   sunset: Date;
-  alertsOld?: WeatherAlertOld[];
   alerts: {
     ongoing: WeatherAlert[];
     expected: WeatherAlert[];

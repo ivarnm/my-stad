@@ -14,7 +14,7 @@ export function addCodesForDuplicateNames(stops: TransitStop[]): TransitStop[] {
 
   const result: TransitStop[] = [];
 
-  for (const [_, group] of byName) {
+  for (const [, group] of byName) {
     if (group.length === 1) {
       result.push(group[0]);
       continue;
