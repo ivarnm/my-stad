@@ -4,6 +4,7 @@ import TimeCard from "src/components/feature/time/TimeCard"
 import TransitDeparturesCard from "src/components/feature/transit/TransitDeparturesCard"
 import TrashCard from "src/components/feature/trash/TrashCard"
 import WeatherForecastCard from "src/components/feature/weather/WeatherForecastCard"
+import WeatherNowCard from "src/components/feature/weather/WeatherNowCard"
 
 export default function Home() {
   return (
@@ -15,6 +16,7 @@ export default function Home() {
         <ElectricityCard />
       </div>
       <div className="flex flex-col gap-4">
+        <WeatherNowCard />
         <WeatherForecastCard />
       </div>
       <div className="flex flex-col gap-4">

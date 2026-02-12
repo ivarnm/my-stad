@@ -1,3 +1,14 @@
+export interface NowWeather {
+  airTemperature: number; // in Celsius
+  windSpeed: number; // in m/s
+  windGustSpeed: number; // in m/s
+  symbolCode?: string; // weather symbol code referencing https://github.com/metno/weathericons/tree/main/weather
+  timeseries?: {
+    time: Date;
+    precipitationRate: number; // in mm/h
+  }[];
+}
+
 export interface HourlyWeather {
   time: Date;
   airTemperature: number; // in Celsius

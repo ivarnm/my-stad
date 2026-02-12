@@ -52,7 +52,7 @@ export default async function WeatherForecastCard() {
                         <span className="text-gray-500">-</span>
                       )}
                     </td>
-                    <td className={`bg-(--surface-muted) px-5 py-1 ${hour.airTemperature > 0 ? 'text-[#F54900]' : 'text-(--fill-default)'}`}>{hour.airTemperature.toFixed(0)}°</td>
+                    <td className={`bg-(--surface-muted) px-5 py-1 ${hour.airTemperature >= 0 ? 'text-[#F54900]' : 'text-(--fill-default)'}`}>{hour.airTemperature.toFixed(0)}°</td>
                     <td className="bg-(--surface-muted) px-5 py-1 text-(--fill-default)">
                       {hour.maxPrecipitationAmount > 0 ? `${hour.minPrecipitationAmount} - ${hour.maxPrecipitationAmount}` : ''}
                     </td>

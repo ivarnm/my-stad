@@ -1,7 +1,13 @@
 import httpClient from "../httpClient";
 import { getUserLocation, UserLocation } from "../location";
 import { Result } from "../types";
-import { ContentBlock, HourlyWeather, WeatherAlert, WeatherForecast } from ".";
+import {
+  ContentBlock,
+  HourlyWeather,
+  NowWeather,
+  WeatherAlert,
+  WeatherForecast,
+} from ".";
 
 interface MetHourlyWeatherResponse {
   properties: {
@@ -55,6 +61,47 @@ interface YrAlertsResponse {
   }[];
 }
 
+interface MetNowcastResponse {
+  properties: {
+    meta: {
+      radar_coverage: "ok" | "temporarily unavailable" | "no coverage";
+    };
+    timeseries: TimeSeriesList;
+  };
+}
+
+type TimeSeriesList = [MetNowCastDetailedData, ...MetNowCastData[]];
+
+interface MetNowCastData {
+  time: string;
+  data: {
+    instant: {
+      details: {
+        precipitation_rate: number;
+      };
+    };
+  };
+}
+
+interface MetNowCastDetailedData {
+  time: string;
+  data: {
+    instant: {
+      details: {
+        precipitation_rate: number;
+        air_temperature: number;
+        wind_speed: number;
+        wind_speed_of_gust: number;
+      };
+    };
+    next_1_hours: {
+      summary: {
+        symbol_code: string;
+      };
+    };
+  };
+}
+
 async function metClient<T>(
   endpoint: string,
   options: RequestInit = {},
@@ -81,6 +128,46 @@ async function yrClient<T>(
   };
 
   return await httpClient<T>(baseUrl, endpoint, options, undefined, revalidate);
+}
+
+export async function getNowWeather(): Promise<Result<NowWeather>> {
+  const location = await getUserLocation();
+  if (!location) {
+    return { error: "No location set" };
+  }
+
+  try {
+    const data = await metClient<MetNowcastResponse>(
+      `nowcast/2.0/complete?lat=${location.lat}&lon=${location.long}`,
+      {},
+      0
+    );
+
+    const result: NowWeather = {
+      airTemperature:
+        data.properties.timeseries[0].data.instant.details.air_temperature,
+      windSpeed: data.properties.timeseries[0].data.instant.details.wind_speed,
+      windGustSpeed:
+        data.properties.timeseries[0].data.instant.details.wind_speed_of_gust,
+      symbolCode:
+        data.properties.timeseries[0].data.next_1_hours.summary.symbol_code,
+    };
+
+    if (
+      data.properties.meta.radar_coverage !== "ok" ||
+      data.properties.timeseries.length <= 1
+    )
+      return { data: result };
+
+    result.timeseries = data.properties.timeseries.map((entry) => ({
+      time: new Date(entry.time),
+      precipitationRate: entry.data.instant.details.precipitation_rate,
+    }));
+    return { data: result };
+  } catch (error) {
+    console.error("Error fetching now weather:", error);
+    return { error: "Failed to fetch current weather" };
+  }
 }
 
 export async function getWeatherForecasat(): Promise<Result<WeatherForecast>> {
