@@ -42,7 +42,7 @@ export default function TransitStopSelector({ lat, long, selectedStops, onStopCh
           <input
             type="checkbox"
             name="transitStops"
-            value={JSON.stringify(stop)} // TODO: test this
+            value={JSON.stringify(stop)}
             checked={selectedStops.includes(stop.id)}
             onChange={() => onStopChange(stop)}
             className="accent-(--fill-default)"

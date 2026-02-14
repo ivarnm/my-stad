@@ -66,7 +66,7 @@ interface TransitDeparturesResponse {
 
 async function enturClient<T>(
   query: string,
-  variables: Record<string, unknown> = {}
+  variables: Record<string, unknown> = {},
 ): Promise<T> {
   const endpoint = "https://api.entur.io/journey-planner/v3/graphql";
 
@@ -82,22 +82,22 @@ async function enturClient<T>(
       body: JSON.stringify({ query, variables }),
     },
     undefined,
-    0
+    0,
   );
   return response;
 }
 
 export async function getClosestTransitStops(
   lat: number,
-  long: number
+  long: number,
 ): Promise<Result<TransitStop[]>> {
   const query = `
     query getNearestTransitStops($latitude: Float!, $longitude: Float!) {
       nearest(
         latitude: $latitude
         longitude: $longitude
-        maximumDistance: 750
-        maximumResults: 10
+        maximumDistance: 1100
+        maximumResults: 15
         filterByPlaceTypes: [stopPlace]
       ) {
         edges {
@@ -127,7 +127,7 @@ export async function getClosestTransitStops(
   try {
     const response = await enturClient<GraphqlResponse<NearestResponse>>(
       query,
-      variables
+      variables,
     );
 
     if (response.errors && response.errors.length > 0) {
@@ -159,7 +159,7 @@ export async function getClosestTransitStops(
 
     const transitStops: TransitStop[] = quays.map((quay) => ({
       id: quay.id,
-      name: `${quay.name} ${quay.publicCode}`,
+      name: `${quay.name} ${quay.publicCode ? `${quay.publicCode}` : ""}`,
       distance: Math.round(quay.distance),
     }));
     const transitStopsWithCodes = addCodesForDuplicateNames(transitStops);
@@ -222,7 +222,7 @@ export async function getTransitStopDepartures(): Promise<
     const stopDepartures: TransitStopDepartures[] = response.data.quays.map(
       (quay) => {
         const stopInfo = userSettings.transitStops!.find(
-          (stop) => stop.id === quay.id
+          (stop) => stop.id === quay.id,
         );
         const departures = quay.estimatedCalls.map((call) => ({
           name: call.destinationDisplay.frontText,
@@ -237,7 +237,7 @@ export async function getTransitStopDepartures(): Promise<
           stop: stopInfo!,
           departures,
         };
-      }
+      },
     );
 
     return { data: stopDepartures };
