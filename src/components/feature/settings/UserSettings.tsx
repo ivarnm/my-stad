@@ -72,8 +72,8 @@ export default function UserSettings({ location }: { location: UserLocation | nu
 
   const handleTransitStopChange = (stop: TransitStop) => {
     setFormValues(prev => {
-      const stops = prev.transitStops.includes(stop)
-        ? prev.transitStops.filter(s => s !== stop)
+      const stops = prev.transitStops.some(s => s.id === stop.id)
+        ? prev.transitStops.filter(s => s.id !== stop.id)
         : [...prev.transitStops, stop];
       return { ...prev, transitStops: stops };
     });
