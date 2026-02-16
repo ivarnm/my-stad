@@ -17,15 +17,19 @@ export default function CurrentPrice({ data }: { data: ElectricityPrices | undef
     });
   }, [data]);
 
+  const formatPrice = (price: number) => {
+    return price.toFixed(2).replace('.', ',') + ' kr';
+  }
+
   if (!currentDataPoint) {
     return null;
   }
 
 
   return (
-    <div className='flex flex-col items-end'>
-      <span className='text-xl'>{currentDataPoint.pricePerKWh.toFixed(2).replace('.', ',')} kr</span>
-      <span className='text-sm'>per kWh</span>
+    <div className='flex flex-col items-end absolute top-3 right-4'>
+      <span className='text-lg'>{formatPrice(currentDataPoint.priceWithSubsidy)}</span>
+      <span className='text-xs'>per kWh</span>
     </div>
   )
 }

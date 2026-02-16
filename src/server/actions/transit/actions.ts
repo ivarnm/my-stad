@@ -188,7 +188,7 @@ export async function getTransitStopDepartures(): Promise<
       query getDepartures($ids: [String!]) {
         quays(ids: $ids) {
           id
-          estimatedCalls(numberOfDepartures: 6, timeRange: 86400) {
+          estimatedCalls(numberOfDepartures: 4, timeRange: 86400) {
             realtime
             aimedDepartureTime
             expectedDepartureTime

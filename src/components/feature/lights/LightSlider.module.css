@@ -1,6 +1,7 @@
 .slider {
+  --thumb-size: 1.2em;
+  height: 0.5rem;
   width: 100%;
-  height: 0.75rem;
   appearance: none;
   cursor: pointer;
   border-radius: 9999px;
@@ -8,8 +9,8 @@
 
 .slider::-webkit-slider-thumb {
   appearance: none;
-  width: 1.5em;
-  height: 1.5em;
+  width: var(--thumb-size);
+  height: var(--thumb-size);
   border-radius: 50%;
   background: white;
   cursor: pointer;
@@ -17,8 +18,8 @@
 }
 
 .slider::-moz-range-thumb {
-  width: 1.5em;
-  height: 1.5em;
+  width: var(--thumb-size);
+  height: var(--thumb-size);
   border-radius: 50%;
   background: white;
   cursor: pointer;

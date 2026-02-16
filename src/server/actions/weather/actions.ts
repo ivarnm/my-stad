@@ -8,6 +8,7 @@ import {
   WeatherAlert,
   WeatherForecast,
 } from ".";
+import { calculatePerceivedTemperature } from "./calculatePerceivedTemperature";
 
 interface MetHourlyWeatherResponse {
   properties: {
@@ -92,6 +93,7 @@ interface MetNowCastDetailedData {
         air_temperature: number;
         wind_speed: number;
         wind_speed_of_gust: number;
+        relative_humidity: number;
       };
     };
     next_1_hours: {
@@ -105,7 +107,7 @@ interface MetNowCastDetailedData {
 async function metClient<T>(
   endpoint: string,
   options: RequestInit = {},
-  revalidate: number = 3600
+  revalidate: number = 3600,
 ): Promise<T> {
   const baseUrl = "https://api.met.no/weatherapi/";
   options.headers = {
@@ -119,7 +121,7 @@ async function metClient<T>(
 async function yrClient<T>(
   endpoint: string,
   options: RequestInit = {},
-  revalidate: number = 3600
+  revalidate: number = 3600,
 ): Promise<T> {
   const baseUrl = "https://www.yr.no/api/v0/";
   options.headers = {
@@ -140,7 +142,7 @@ export async function getNowWeather(): Promise<Result<NowWeather>> {
     const data = await metClient<MetNowcastResponse>(
       `nowcast/2.0/complete?lat=${location.lat}&lon=${location.long}`,
       {},
-      0
+      0,
     );
 
     const result: NowWeather = {
@@ -152,6 +154,11 @@ export async function getNowWeather(): Promise<Result<NowWeather>> {
       symbolCode:
         data.properties.timeseries[0].data.next_1_hours.summary.symbol_code,
     };
+    result.perceivedTemperature = calculatePerceivedTemperature(
+      result.airTemperature,
+      result.windSpeed,
+      data.properties.timeseries[0].data.instant.details.relative_humidity,
+    );
 
     if (
       data.properties.meta.radar_coverage !== "ok" ||
@@ -198,14 +205,14 @@ export async function getWeatherForecasat(): Promise<Result<WeatherForecast>> {
 }
 
 async function getHourlyWeather(
-  location: UserLocation
+  location: UserLocation,
 ): Promise<HourlyWeather[]> {
   const data = await metClient<MetHourlyWeatherResponse>(
     `locationforecast/2.0/complete?lat=${location.lat}&lon=${location.long}`,
     {},
-    0
+    0,
   );
-  const timeseries = data.properties.timeseries.slice(0, 24); // Get next 24 hours
+  const timeseries = data.properties.timeseries.slice(0, 10); // Get next 10 hours. TODO: increase when we have scrolling inside the card
 
   return timeseries.map((entry) => {
     const details = entry.data.instant.details;
@@ -229,7 +236,7 @@ async function getHourlyWeather(
 }
 
 async function getSunriseAndSunset(
-  location: UserLocation
+  location: UserLocation,
 ): Promise<{ sunrise: Date; sunset: Date }> {
   const today = new Date();
   const dateStr = today.toISOString().split("T")[0];
@@ -237,7 +244,7 @@ async function getSunriseAndSunset(
   const data = await metClient<MetSunsetResponse>(
     `sunrise/3.0/sun?lat=${location.lat}&lon=${location.long}&date=${dateStr}`,
     {},
-    86400
+    86400,
   );
 
   return {
@@ -253,7 +260,7 @@ async function getWeatherAlerts(): Promise<WeatherForecast["alerts"]> {
   const data = await yrClient<YrAlertsResponse>(
     `locations/${location}/warnings?language=en`,
     {},
-    0
+    0,
   );
 
   return data.warnings
@@ -263,7 +270,7 @@ async function getWeatherAlerts(): Promise<WeatherForecast["alerts"]> {
       severity: warning.meta.severity,
       eventStatus: warning.meta.eventStatus,
       warningIcon: `icon-warning-${warning.meta.eventType.toLowerCase()}-${getSeverityColor(
-        warning.meta.severity
+        warning.meta.severity,
       )}.png`,
       area: warning.meta.areas.find(Boolean),
       content: warning.content,
@@ -283,7 +290,7 @@ async function getWeatherAlerts(): Promise<WeatherForecast["alerts"]> {
         }
         return acc;
       },
-      { ongoing: [] as WeatherAlert[], expected: [] as WeatherAlert[] }
+      { ongoing: [] as WeatherAlert[], expected: [] as WeatherAlert[] },
     );
 }
 

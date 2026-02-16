@@ -28,7 +28,7 @@ export default function TimeCardContent({ now, date, weekday, weekNumber, locati
           <p className="text-(--text-subtle)">
             {weekday}, {date} · Week {weekNumber}
           </p>
-          <p className="text-(--text-subtle) text-sm mt-1 min-h-5">
+          {/* <p className="text-(--text-subtle) text-sm mt-1 min-h-5">
             {location?.address ? (
               <>
                 {location.address}
@@ -36,7 +36,7 @@ export default function TimeCardContent({ now, date, weekday, weekNumber, locati
             ) : (
               <>No location set</>
             )}
-          </p>
+          </p> */}
         </div>
       </button>
       <Dialog

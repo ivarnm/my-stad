@@ -1,9 +1,9 @@
 import Card from "src/components/ui/Card";
+import CardHeader from "src/components/ui/CardHeader";
 import { getTransitStopDepartures } from "src/server/actions/transit";
 
 export default async function TransitDeparturesCard() {
   const result = await getTransitStopDepartures();
-  console.log(result)
 
   function getDepartureTime(expectedTime: Date) {
     const now = new Date();
@@ -21,32 +21,27 @@ export default async function TransitDeparturesCard() {
 
   return (
     <Card className="flex flex-col">
-      <div className="flex gap-2 items-center mb-3">
-        <span className="material-symbols-outlined text-(--text-subtle)">
-          directions_bus
-        </span>
-        <h2 className="text-xl font-bold">Departures</h2>
-      </div>
+      <CardHeader icon="directions_bus" title="Departures" />
       <div>
         {result.error && (
           <p>{result.error}</p>
         )}
         {!result.error && result.data && result.data.length === 0 && (
-          <p>Could not find a trash schedule</p>
+          <p>Could not find any departures</p>
         )}
         {!result.error && result.data && result.data.length > 0 && (
-          <div className="flex flex-col gap-6">
+          <div className="flex flex-col gap-4 text-sm">
             {result.data.map((stop) => (
               <div key={stop.stop.id}>
-                <h3 className="text-(--text-subtle) mb-2">{stop.stop.name} {stop.stop.code ? `(${stop.stop.code})` : ""} - {stop.stop.distance}m</h3>
-                <div className="flex flex-col gap-3">
+                <h3 className="text-(--text-subtle) mb-1">{stop.stop.name} {stop.stop.code ? `(${stop.stop.code})` : ""} - {stop.stop.distance}m</h3>
+                <div className="flex flex-col gap-2">
                   {stop.departures.length === 0 && (
-                    <p className="text-sm text-(--text-subtle)">No upcoming departures</p>
+                    <p className="text-(--text-subtle)">No upcoming departures</p>
                   )}
                   {stop.departures.length > 0 && (
                     <>
                       {stop.departures.map((departure) => (
-                        <div key={departure.lineCode + departure.expectedTime} className="flex gap-4 bg-(--surface-muted) px-3 py-2 rounded-xl items-center">
+                        <div key={departure.lineCode + departure.expectedTime} className="flex gap-4 bg-(--surface-muted) px-4 py-2 rounded-xl items-center">
                           <span className="w-8 bg-(--fill-default) rounded flex items-center justify-center">{departure.lineCode}</span>
                           <span className="flex-1">{departure.name}</span>
                           <span>{getDepartureTime(new Date(departure.expectedTime))}</span>

@@ -29,10 +29,10 @@ export default function LightSlider({ ikeaLightGroup }: { ikeaLightGroup: IkeaLi
   };
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-1">
       <div className="flex items-center justify-between">
-        <h3 className="text-xl font-medium">{ikeaLightGroup.name}</h3>
-        <span className="text-neutral-400 text-lg">{lightLevel > 0 ? `${lightLevel}%` : "Off"}</span>
+        <h3 className=" font-medium">{ikeaLightGroup.name}</h3>
+        <span className="text-neutral-400">{lightLevel > 0 ? `${lightLevel}%` : "Off"}</span>
       </div>
       <div className="relative w-full">
         <input

@@ -6,7 +6,7 @@ import { IkeaDevice, IkeaLightGroup } from "./types";
 
 async function ikeaClient<T>(
   endpoint: string,
-  options: RequestInit = {}
+  options: RequestInit = {},
 ): Promise<T> {
   const baseUrl = process.env.IKEA_HUB_URL;
   if (!baseUrl) {
@@ -16,7 +16,7 @@ async function ikeaClient<T>(
   const accessToken = process.env.IKEA_ACCESS_TOKEN;
   if (!accessToken) {
     throw new Error(
-      "IKEA_ACCESS_TOKEN is not defined as an environment variable"
+      "IKEA_ACCESS_TOKEN is not defined as an environment variable",
     );
   }
 
@@ -62,7 +62,7 @@ export async function getIkeaLightGroups(): Promise<Result<IkeaLightGroup[]>> {
 
 export async function setIkeaGroupLightLevel(
   ikeaGroupId: string,
-  lightLevel: number
+  lightLevel: number,
 ): Promise<Result<void>> {
   // call setDeviceLightLevel for each device in the group in parallel
   try {
@@ -72,14 +72,16 @@ export async function setIkeaGroupLightLevel(
     }
 
     const ikeaGroup = groupResult.data!.find(
-      (group) => group.id === ikeaGroupId
+      (group) => group.id === ikeaGroupId,
     );
     if (!ikeaGroup) {
       return { error: "Klarte ikke å finne lysgruppen" };
     }
 
     await Promise.all(
-      ikeaGroup.devices.map((device) => setDeviceLightLevel(device, lightLevel))
+      ikeaGroup.devices.map((device) =>
+        setDeviceLightLevel(device, lightLevel),
+      ),
     );
     return { data: undefined };
   } catch (error) {
@@ -90,7 +92,7 @@ export async function setIkeaGroupLightLevel(
 
 export async function setDeviceLightLevel(
   device: IkeaDevice,
-  lightLevel: number
+  lightLevel: number,
 ): Promise<Result<void>> {
   try {
     if (lightLevel === 0) {
@@ -110,9 +112,8 @@ export async function setDeviceLightLevel(
 
 async function patchDeviceAttributes(
   deviceId: string,
-  attributes: Partial<IkeaDevice["attributes"]>
+  attributes: Partial<IkeaDevice["attributes"]>,
 ): Promise<void> {
-  console.log(`Patching device ${deviceId} with`, attributes);
   await ikeaClient<void>(`v1/devices/${deviceId}`, {
     method: "PATCH",
     body: JSON.stringify([{ attributes }]),

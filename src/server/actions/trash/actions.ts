@@ -22,6 +22,7 @@ interface Calendar {
 
 const trashMapping: Record<string, { color: string; name: string }> = {
   "2400": { color: "#3880B9", name: "Paper" },
+  "2612": { color: "#1CB08E", name: "Glass and metal" },
   "3000": { color: "#479e55", name: "Food waste" },
   "3200": { color: "#8a2a7e", name: "Plastics" },
   "9999": { color: "#f5f5f5", name: "General waste" },
@@ -29,7 +30,7 @@ const trashMapping: Record<string, { color: string; name: string }> = {
 
 async function trvClient<T>(
   endpoint: string,
-  options: RequestInit = {}
+  options: RequestInit = {},
 ): Promise<T> {
   const baseUrl = "https://trv.no/wp-json/wasteplan/v2/";
 
@@ -45,14 +46,14 @@ export async function getTrashSchedule(): Promise<Result<TrashSchedule[]>> {
   try {
     const encodedAddress = encodeURIComponent(location.address);
     const trashLocation = await trvClient<TrashLocation[]>(
-      `adress?s=${encodedAddress}`
+      `adress?s=${encodedAddress}`,
     );
 
     if (trashLocation.length === 0) {
       return { error: "No trash location found for the given address" };
     }
     const trashCalendar = await trvClient<TrashCalendar>(
-      `calendar/${trashLocation[0].id}`
+      `calendar/${trashLocation[0].id}`,
     );
 
     const now = new Date();
@@ -72,9 +73,9 @@ export async function getTrashSchedule(): Promise<Result<TrashSchedule[]>> {
       }
     }
 
-    const schedule = Object.values(scheduleMap).sort(
-      (a, b) => a.daysUntilNextPickup - b.daysUntilNextPickup
-    );
+    const schedule = Object.values(scheduleMap)
+      .sort((a, b) => a.daysUntilNextPickup - b.daysUntilNextPickup)
+      .slice(0, 4);
 
     return { data: schedule };
   } catch (error) {

@@ -1,18 +1,14 @@
 import Card from 'src/components/ui/Card'
 import { getIkeaLightGroups } from 'src/server/actions/ikea';
 import LightSlider from './LightSlider';
+import CardHeader from 'src/components/ui/CardHeader';
 
 export default async function LightControlsCard() {
   const result = await getIkeaLightGroups();
 
   return (
     <Card>
-      <div className='flex gap-2 items-center mb-3'>
-        <span className="material-symbols-outlined text-(--text-subtle)">
-          lightbulb
-        </span>
-        <h2 className="text-xl font-bold">Lights</h2>
-      </div>
+      <CardHeader icon="lightbulb" title="Lights" />
       <div className='flex flex-col gap-3'>
         {result.error && (
           <p>{result.error}</p>

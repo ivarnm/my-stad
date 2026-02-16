@@ -39,7 +39,6 @@ export default function IkeaLightControl({
 
   const handleSliderRelease = async (group: IkeaLightGroup) => {
     const level = lightLevels[group.id];
-    console.log(`Set group ${group.name} light to ${level}`);
 
     const result = await setIkeaGroupLightLevel(group.id, level);
     if (result.error) {
@@ -49,7 +48,7 @@ export default function IkeaLightControl({
 
   return (
     <div className="w-full max-w-2xl mx-auto p-6 space-y-6">
-      <h2 className="text-2xl font-bold mb-4">Light Control</h2>
+      <h2 className="text-xl font-bold mb-4">Light Control</h2>
       {lightGroups.map((group) => (
         <div
           key={group.id}
