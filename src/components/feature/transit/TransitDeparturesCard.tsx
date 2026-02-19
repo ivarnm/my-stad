@@ -8,7 +8,7 @@ export default async function TransitDeparturesCard() {
   const result = await getTransitStopDepartures();
 
   return (
-    <Card className="flex flex-col">
+    <Card className="flex flex-col h-full">
       <CardHeader icon="directions_bus" title="Departures" />
       <div>
         {result.error && (

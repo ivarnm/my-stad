@@ -10,7 +10,7 @@ export default async function WeatherForecastCard() {
   const hasPercipitation = forecast?.weather.some(hour => hour.maxPrecipitationAmount > 0);
 
   return (
-    <Card className="flex flex-col">
+    <Card className="flex flex-col h-full">
       <div className='flex gap-2 items-center justify-between mb-1'>
         <h2 className="text-lg font-bold">Weather Today</h2>
         {!result.error && forecast && (
