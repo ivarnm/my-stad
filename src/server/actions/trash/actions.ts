@@ -1,3 +1,5 @@
+"use server";
+
 import { getUserLocation } from "../location";
 import type { TrashSchedule } from ".";
 import { Result } from "../types";

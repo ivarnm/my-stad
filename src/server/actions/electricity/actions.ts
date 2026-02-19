@@ -9,22 +9,22 @@ interface ElectricityApiResponse {
 
 async function electricityClient<T>(
   endpoint: string,
-  options: RequestInit = {}
+  options: RequestInit = {},
 ): Promise<T> {
   const baseUrl = "https://www.hvakosterstrommen.no/api/v1/";
 
-  return await httpClient<T>(baseUrl, endpoint, options, undefined, 3600);
+  return await httpClient<T>(baseUrl, endpoint, options, undefined, false);
 }
 
 async function fetchPricesForDate(
-  date: Date
+  date: Date,
 ): Promise<HourlyElectricityPrice[]> {
   const yyyy = date.getFullYear();
   const mm = String(date.getMonth() + 1).padStart(2, "0");
   const dd = String(date.getDate()).padStart(2, "0");
 
   const apiResponse = await electricityClient<ElectricityApiResponse[]>(
-    `prices/${yyyy}/${mm}-${dd}_NO3.json`
+    `prices/${yyyy}/${mm}-${dd}_NO3.json`,
   );
 
   return apiResponse.map((price) => {
@@ -36,7 +36,9 @@ async function fetchPricesForDate(
       priceWithSubsidy:
         price.NOK_per_kWh > 0.75
           ? parseFloat(
-              (pricePerKWh - (price.NOK_per_kWh - 0.75) * 0.9 * 1.25).toFixed(2)
+              (pricePerKWh - (price.NOK_per_kWh - 0.75) * 0.9 * 1.25).toFixed(
+                2,
+              ),
             )
           : pricePerKWh,
     };

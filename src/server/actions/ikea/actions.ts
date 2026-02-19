@@ -20,7 +20,7 @@ async function ikeaClient<T>(
     );
   }
 
-  return await httpClient<T>(baseUrl, endpoint, options, accessToken);
+  return await httpClient<T>(baseUrl, endpoint, options, accessToken, 0);
 }
 
 export async function getIkeaLightGroups(): Promise<Result<IkeaLightGroup[]>> {

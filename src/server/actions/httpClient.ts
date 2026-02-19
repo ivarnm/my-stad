@@ -7,14 +7,14 @@
  * @param endpoint The API endpoint to call (e.g., '/users').
  * @param options The standard `fetch` options (method, body, etc.).
  * @param accessToken Optional access token for authorization.
- * @param revalidate Optional revalidation time in seconds for Next.js caching.
+ * @param revalidate Optional revalidation time in seconds for Next.js caching. A value of 0 ensures the data is not cached, while false caches it indefinitely.
  */
 async function httpClient<T>(
   baseUrl: string,
   endpoint: string,
   options: RequestInit = {},
   accessToken?: string,
-  revalidate?: number
+  revalidate?: number | false,
 ): Promise<T> {
   const fullUrl = `${baseUrl}${endpoint}`;
 
@@ -41,7 +41,7 @@ async function httpClient<T>(
     if (!response.ok) {
       const errorBody = await response.text();
       throw new Error(
-        `API call failed with status ${response.status}: ${errorBody}`
+        `API call failed with status ${response.status}: ${errorBody}`,
       );
     }
 

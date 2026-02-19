@@ -1,5 +1,7 @@
 import ElectricityCard from "src/components/feature/electricity/ElectricityCard"
 import LightControlsCard from "src/components/feature/lights/LightControlsCard"
+import DashboardRefresh from "src/components/feature/refresh/DashboardRefresh"
+import { NightlyReset } from "src/components/feature/refresh/NightlyReset"
 import TimeCard from "src/components/feature/time/TimeCard"
 import TransitDeparturesCard from "src/components/feature/transit/TransitDeparturesCard"
 import TrashCard from "src/components/feature/trash/TrashCard"
@@ -22,6 +24,8 @@ export default function Home() {
       <div className="flex flex-col gap-3">
         <TransitDeparturesCard />
       </div>
+      <DashboardRefresh />
+      <NightlyReset />
     </div>
   )
 }

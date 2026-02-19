@@ -107,7 +107,7 @@ interface MetNowCastDetailedData {
 async function metClient<T>(
   endpoint: string,
   options: RequestInit = {},
-  revalidate: number = 3600,
+  revalidate: number = 1800,
 ): Promise<T> {
   const baseUrl = "https://api.met.no/weatherapi/";
   options.headers = {
@@ -121,7 +121,7 @@ async function metClient<T>(
 async function yrClient<T>(
   endpoint: string,
   options: RequestInit = {},
-  revalidate: number = 3600,
+  revalidate: number = 1800,
 ): Promise<T> {
   const baseUrl = "https://www.yr.no/api/v0/";
   options.headers = {
@@ -142,7 +142,7 @@ export async function getNowWeather(): Promise<Result<NowWeather>> {
     const data = await metClient<MetNowcastResponse>(
       `nowcast/2.0/complete?lat=${location.lat}&lon=${location.long}`,
       {},
-      0,
+      300,
     );
 
     const result: NowWeather = {
@@ -210,7 +210,6 @@ async function getHourlyWeather(
   const data = await metClient<MetHourlyWeatherResponse>(
     `locationforecast/2.0/complete?lat=${location.lat}&lon=${location.long}`,
     {},
-    0,
   );
   const timeseries = data.properties.timeseries.slice(0, 10); // Get next 10 hours. TODO: increase when we have scrolling inside the card
 
@@ -260,7 +259,6 @@ async function getWeatherAlerts(): Promise<WeatherForecast["alerts"]> {
   const data = await yrClient<YrAlertsResponse>(
     `locations/${location}/warnings?language=en`,
     {},
-    0,
   );
 
   return data.warnings
