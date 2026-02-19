@@ -42,7 +42,7 @@ export default function UserSettings({ location }: { location: UserLocation | nu
         }));
       }, (error) => {
         console.error("Error getting location:", error);
-        alert("Could not get location. Please enter manually.");
+        alert(`Could not get location. Please enter manually. \nError code: ${error.code} \nMessage: ${error.message}`);
       });
     } else {
       alert("Geolocation is not available in your browser.");
