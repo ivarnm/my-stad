@@ -17,9 +17,14 @@ export default async function LightControlsCard() {
           <p>No rooms with lights found.</p>
         )}
         {!result.error && result.data && result.data.length > 0 && (
-          result.data.map((group) => (
-            <LightSlider key={group.id} ikeaLightGroup={group} />
-          ))
+          result.data.map((group) => {
+            const stateKey = group.devices
+              .map((d) => `${d.id}-${d.attributes.isOn}-${d.attributes.lightLevel}`)
+              .join("|");
+            return (
+              <LightSlider key={`${group.id}-${stateKey}`} ikeaLightGroup={group} />
+            );
+          })
         )}
       </div>
     </Card>
